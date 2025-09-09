@@ -4,6 +4,7 @@ import {RegisterRequest} from '../models/register-request';
 import {AuthenticationResponse} from '../models/authentication-response';
 import {Observable} from 'rxjs';
 import {VerificationRequest} from '../models/verification-request';
+import {AuthenticationRequest} from '../models/authentication-request';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,10 @@ export class AuthenticationService {
 
   register(registerRequest : RegisterRequest): Observable<AuthenticationResponse> {
     return this.http.post<AuthenticationResponse>(`${this.baseUrl}/register`, registerRequest);
+  }
+
+  login(authRequest: AuthenticationRequest):Observable<AuthenticationResponse> {
+    return this.http.post<AuthenticationResponse>(`${this.baseUrl}/authenticate`, authRequest);
   }
 
   verifyCode(verificationRequest: VerificationRequest):Observable<AuthenticationResponse>{

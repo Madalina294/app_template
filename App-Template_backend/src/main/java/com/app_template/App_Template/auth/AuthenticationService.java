@@ -1,14 +1,7 @@
 package com.app_template.App_Template.auth;
 
-import com.app_template.App_Template.config.JwtService;
-import com.app_template.App_Template.repository.UserRepository;
-import com.app_template.App_Template.tfa.TwoFactorAuthenticationService;
-import com.app_template.App_Template.user.User;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
+import java.io.IOException;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -16,7 +9,17 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
+import com.app_template.App_Template.config.JwtService;
+import com.app_template.App_Template.repository.UserRepository;
+import com.app_template.App_Template.tfa.TwoFactorAuthenticationService;
+import com.app_template.App_Template.user.Role;
+import com.app_template.App_Template.user.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +36,7 @@ public class AuthenticationService {
                 .lastname(registerRequest.getLastname())
                 .email(registerRequest.getEmail())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
-                .role(registerRequest.getRole())
+                .role(registerRequest.getRole() != null ? registerRequest.getRole() : Role.USER)
                 .mfaEnabled(registerRequest.isMfaEnabled())
                 .build();
 

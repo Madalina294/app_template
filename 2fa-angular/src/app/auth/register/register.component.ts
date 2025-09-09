@@ -19,7 +19,9 @@ import {NgIf} from '@angular/common';
 })
 export class RegisterComponent {
   message: string = '';
-  registerRequest: RegisterRequest = {};
+  registerRequest: RegisterRequest = {
+    role: 'USER'  // Setează rolul implicit ca USER
+  };
   authResponse: AuthenticationResponse = {};
   otpCode = '';
 
