@@ -1,5 +1,6 @@
-package com.app_template.App_Template.user;
+package com.app_template.App_Template.entity;
 
+import com.app_template.App_Template.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +10,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
 
 @Builder
 @Data

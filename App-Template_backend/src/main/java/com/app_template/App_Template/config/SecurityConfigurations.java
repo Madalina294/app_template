@@ -15,16 +15,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static com.app_template.App_Template.user.Permission.ADMIN_CREATE;
-import static com.app_template.App_Template.user.Permission.ADMIN_DELETE;
-import static com.app_template.App_Template.user.Permission.ADMIN_READ;
-import static com.app_template.App_Template.user.Permission.ADMIN_UPDATE;
-import static com.app_template.App_Template.user.Permission.MANAGER_CREATE;
-import static com.app_template.App_Template.user.Permission.MANAGER_DELETE;
-import static com.app_template.App_Template.user.Permission.MANAGER_READ;
-import static com.app_template.App_Template.user.Permission.MANAGER_UPDATE;
-import static com.app_template.App_Template.user.Role.ADMIN;
-import static com.app_template.App_Template.user.Role.MANAGER;
+import static com.app_template.App_Template.enums.Permission.ADMIN_CREATE;
+import static com.app_template.App_Template.enums.Permission.ADMIN_DELETE;
+import static com.app_template.App_Template.enums.Permission.ADMIN_READ;
+import static com.app_template.App_Template.enums.Permission.ADMIN_UPDATE;
+import static com.app_template.App_Template.enums.Role.ADMIN;
 
 import lombok.RequiredArgsConstructor;
 
@@ -51,23 +46,13 @@ public class SecurityConfigurations {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/api/auth/**",
-                                "/v2/api-docs",
-                                "/v3/api-docs",
-                                "/v3/api-docs/**",
-                                "/swagger-resources",
-                                "/swagger-resources/**",
-                                "/configuration/ui",
-                                "/configuration/security",
-                                "/swagger-ui/**",
-                                "/webjars/**",
-                                "/swagger-ui.html"
+                                "/api/auth/**"
                         ).permitAll()
-                        .requestMatchers("/api/v1/management/**").hasAnyRole(ADMIN.name(), MANAGER.name())
-                        .requestMatchers(GET, "/api/v1/management/**").hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name())
-                        .requestMatchers(POST, "/api/v1/management/**").hasAnyAuthority(ADMIN_CREATE.name(), MANAGER_CREATE.name())
-                        .requestMatchers(PUT, "/api/v1/management/**").hasAnyAuthority(ADMIN_UPDATE.name(), MANAGER_UPDATE.name())
-                        .requestMatchers(DELETE, "/api/v1/management/**").hasAnyAuthority(ADMIN_DELETE.name(), MANAGER_DELETE.name())
+                        .requestMatchers("/api/management/**").hasAnyRole(ADMIN.name())
+                        .requestMatchers(GET, "/api/management/**").hasAnyAuthority(ADMIN_READ.name())
+                        .requestMatchers(POST, "/api/management/**").hasAnyAuthority(ADMIN_CREATE.name())
+                        .requestMatchers(PUT, "/api/management/**").hasAnyAuthority(ADMIN_UPDATE.name())
+                        .requestMatchers(DELETE, "/api/management/**").hasAnyAuthority(ADMIN_DELETE.name())
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

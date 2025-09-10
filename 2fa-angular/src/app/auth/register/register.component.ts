@@ -3,7 +3,7 @@ import {FormsModule} from '@angular/forms';
 import {RegisterRequest} from '../../models/register-request';
 import {AuthenticationResponse} from '../../models/authentication-response';
 import {RouterLink, Router} from '@angular/router';
-import {AuthenticationService} from '../../services/authentication.service';
+import {AuthenticationService} from '../../services/auth/authentication.service';
 import {VerificationRequest} from '../../models/verification-request';
 import {NgIf} from '@angular/common';
 
@@ -20,7 +20,7 @@ import {NgIf} from '@angular/common';
 export class RegisterComponent {
   message: string = '';
   registerRequest: RegisterRequest = {
-    role: 'USER'  // Setează rolul implicit ca USER
+    role: 'USER'  // default
   };
   authResponse: AuthenticationResponse = {};
   otpCode = '';

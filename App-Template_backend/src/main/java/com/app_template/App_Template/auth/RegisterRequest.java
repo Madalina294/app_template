@@ -1,6 +1,6 @@
 package com.app_template.App_Template.auth;
 
-import com.app_template.App_Template.user.Role;
+import com.app_template.App_Template.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
