@@ -3,11 +3,6 @@ package com.app_template.App_Template.service.auth;
 import java.io.IOException;
 import java.util.Optional;
 
-import com.app_template.App_Template.auth.AuthenticationRequest;
-import com.app_template.App_Template.auth.AuthenticationResponse;
-import com.app_template.App_Template.auth.RegisterRequest;
-import com.app_template.App_Template.auth.VerificationRequest;
-import jakarta.annotation.PostConstruct;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -16,13 +11,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.app_template.App_Template.auth.AuthenticationRequest;
+import com.app_template.App_Template.auth.AuthenticationResponse;
+import com.app_template.App_Template.auth.RegisterRequest;
+import com.app_template.App_Template.auth.VerificationRequest;
 import com.app_template.App_Template.config.JwtService;
+import com.app_template.App_Template.entity.User;
+import com.app_template.App_Template.enums.Role;
 import com.app_template.App_Template.repository.UserRepository;
 import com.app_template.App_Template.tfa.TwoFactorAuthenticationService;
-import com.app_template.App_Template.enums.Role;
-import com.app_template.App_Template.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -79,7 +79,11 @@ public class AuthenticationService {
         var refreshToken = jwtService.generateRefreshToken(user);
 
         return AuthenticationResponse.builder()
-                .secretImageUri(tfaService.generateQrCodeImageUri(user.getSecret()))
+                .userId(user.getId())
+                .userFirstName(user.getFirstname())
+                .userLastName(user.getLastname())
+                .userRole(user.getRole())
+                .secretImageUri(user.isMfaEnabled() ? tfaService.generateQrCodeImageUri(user.getSecret()) : null)
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
                 .mfaEnabled(user.isMfaEnabled())

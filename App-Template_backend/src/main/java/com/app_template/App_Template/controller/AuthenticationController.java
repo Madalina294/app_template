@@ -1,17 +1,22 @@
 package com.app_template.App_Template.controller;
 
-import com.app_template.App_Template.auth.*;
-import com.app_template.App_Template.service.auth.AuthenticationService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
+import java.io.IOException;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
+import com.app_template.App_Template.auth.AuthenticationRequest;
+import com.app_template.App_Template.auth.AuthenticationResponse;
+import com.app_template.App_Template.auth.RegisterRequest;
+import com.app_template.App_Template.auth.VerificationRequest;
+import com.app_template.App_Template.service.auth.AuthenticationService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
@@ -22,12 +27,9 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
         var response = authenticationService.register(request);
-        if(request.isMfaEnabled()){
-            return ResponseEntity.ok(response);
-        }
-        return ResponseEntity.accepted().build();
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
