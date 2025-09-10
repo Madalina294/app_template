@@ -15,7 +15,19 @@ export class StorageService {
     return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
   }
 
+  static saveToken(token: string): void{
+    if (!this.isBrowser()) return;
+    console.log('Saving token to localStorage:', token);
+    window.localStorage.removeItem(TOKEN);
+    window.localStorage.setItem(TOKEN, token);
+    console.log('Token saved successfully');
+  }
 
+  static saveUser(user: any): void{
+    if (!this.isBrowser()) return;
+    window.localStorage.removeItem(USER);
+    window.localStorage.setItem(USER, JSON.stringify(user));
+  }
   static getToken(): string | null{
     if (!this.isBrowser()) return null;
     const token = window.localStorage.getItem(TOKEN);

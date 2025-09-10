@@ -98,6 +98,10 @@ public class AuthenticationService {
                 .orElseThrow();
         if(user.isMfaEnabled()){
             return AuthenticationResponse.builder()
+                    .userId(user.getId())
+                    .userFirstName(user.getFirstname())
+                    .userLastName(user.getLastname())
+                    .userRole(user.getRole())
                     .accessToken("")
                     .refreshToken("")
                     .mfaEnabled(true)
@@ -108,6 +112,10 @@ public class AuthenticationService {
         var refreshToken = jwtService.generateRefreshToken(user);
 
         return AuthenticationResponse.builder()
+                .userId(user.getId())
+                .userFirstName(user.getFirstname())
+                .userLastName(user.getLastname())
+                .userRole(user.getRole())
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
                 .mfaEnabled(false)
