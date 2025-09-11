@@ -72,4 +72,12 @@ export class StorageService {
     window.localStorage.removeItem(TOKEN);
   }
 
+  static getUserName(): string{
+    const user = this.getUser();
+    if(user){
+      return user.firstname + " " + user.lastname;
+    }
+    return '';
+  }
+
 }
