@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {StorageService} from '../../services/storage/storage.service';
 import {NgIf} from '@angular/common';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-welcome',
@@ -12,7 +13,7 @@ export class WelcomeComponent implements OnInit {
   user: any = null;
   userImage: string | null = null;
 
-  constructor() {
+  constructor(private router: Router) {
   }
 
   ngOnInit() {
@@ -22,6 +23,7 @@ export class WelcomeComponent implements OnInit {
 
   logout(){
     StorageService.signout();
+    this.router.navigateByUrl("/login")
   }
 
 }

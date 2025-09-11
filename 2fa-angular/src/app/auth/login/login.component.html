@@ -49,11 +49,11 @@
               formControlName="password"
               class="form-input"
             />
-            <ng-template #errorPass let-control>
+            <ng-template  style="margin-bottom: 10px;" #errorPass let-control>
               <ng-container *ngIf="control.hasError('required')">
                 Password is required
               </ng-container>
-              <ng-container *ngIf="control.hasError('pattern')">
+              <ng-container *ngIf="control.hasError('pattern')" style="margin-bottom: 10px;">
                 Password must contain at least 8 characters with uppercase,
                 lowercase, number and special character
               </ng-container>
