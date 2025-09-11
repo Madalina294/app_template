@@ -22,21 +22,26 @@ export class AppComponent {
   isAdminLoggedIn: boolean = false;
   isCustomerLoggedIn: boolean = false;
   userName: string | null = null;
+  userImage: string | null = null;
 
   constructor(private router: Router, private snackBar: MatSnackBar) {
   }
 
   ngOnInit(){
+    this.updateUserData();
+    this.router.events.subscribe(event => {
+      if(event.constructor.name === "NavigationEnd"){
+        this.updateUserData();
+      }
+    })
+  }
+
+  private updateUserData() {
     this.isAdminLoggedIn = StorageService.isAdminLoggedIn();
     this.isCustomerLoggedIn = StorageService.isCustomerLoggedIn();
     this.userName = StorageService.getUserName();
-    this.router.events.subscribe(event => {
-      if(event.constructor.name === "NavigationEnd"){
-        this.isAdminLoggedIn = StorageService.isAdminLoggedIn();
-        this.isCustomerLoggedIn = StorageService.isCustomerLoggedIn();
-        this.userName = StorageService.getUserName();
-      }
-    })
+    const user = StorageService.getUser();
+    this.userImage = user?.image || null;
   }
 
   logout(){

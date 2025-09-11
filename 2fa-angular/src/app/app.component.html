@@ -75,7 +75,6 @@
 
     <span class="spacer"></span>
 
-
     <!-- User Profile & Actions -->
     <div class="header-actions">
       <!-- Login Button for Guests -->
@@ -93,7 +92,13 @@
       <div class="user-profile" *ngIf="isCustomerLoggedIn">
         <a routerLink="/user/my-account" class="user-link">
           <div class="user-avatar">
-            <mat-icon>person</mat-icon>
+            <img
+              *ngIf="userImage"
+              [src]="userImage"
+              alt="User Avatar"
+              class="user-avatar-image"
+            />
+            <mat-icon *ngIf="!userImage">person</mat-icon>
           </div>
           <span class="user-name">{{ userName }}</span>
         </a>
@@ -103,7 +108,13 @@
       <div class="user-profile" *ngIf="isAdminLoggedIn">
         <a routerLink="/admin/admin-panel" class="user-link">
           <div class="user-avatar">
-            <mat-icon>person</mat-icon>
+            <img
+              *ngIf="userImage"
+              [src]="userImage"
+              alt="User Avatar"
+              class="user-avatar-image"
+            />
+            <mat-icon *ngIf="!userImage">person</mat-icon>
           </div>
           <span class="user-name">{{ userName }}</span>
         </a>

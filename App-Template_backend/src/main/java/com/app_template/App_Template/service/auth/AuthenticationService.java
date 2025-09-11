@@ -1,6 +1,7 @@
 package com.app_template.App_Template.service.auth;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.Optional;
 
 import org.springframework.http.HttpHeaders;
@@ -58,12 +59,29 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse register(RegisterRequest registerRequest) {
+        // Convert base64 string to byte array for storage
+        byte[] imageBytes = null;
+        if (registerRequest.getImage() != null && !registerRequest.getImage().isEmpty()) {
+            try {
+                // Remove data URL prefix if present (data:image/jpeg;base64,)
+                String base64Data = registerRequest.getImage();
+                if (base64Data.contains(",")) {
+                    base64Data = base64Data.split(",")[1];
+                }
+                imageBytes = Base64.getDecoder().decode(base64Data);
+            } catch (IllegalArgumentException e) {
+                // Handle invalid base64 data
+                System.err.println("Invalid base64 image data: " + e.getMessage());
+            }
+        }
+
         var user = User.builder()
                 .firstname(registerRequest.getFirstname())
                 .lastname(registerRequest.getLastname())
                 .email(registerRequest.getEmail())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .role(registerRequest.getRole() != null ? registerRequest.getRole() : Role.USER)
+                .image(imageBytes)
                 .mfaEnabled(registerRequest.isMfaEnabled())
                 .build();
 
@@ -78,11 +96,18 @@ public class AuthenticationService {
         var jwtToken  = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
 
+        // Convert byte array to base64 string for response
+        String base64Image = null;
+        if (user.getImage() != null) {
+            base64Image = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(user.getImage());
+        }
+
         return AuthenticationResponse.builder()
                 .userId(user.getId())
                 .userFirstName(user.getFirstname())
                 .userLastName(user.getLastname())
                 .userRole(user.getRole())
+                .image(base64Image)
                 .secretImageUri(user.isMfaEnabled() ? tfaService.generateQrCodeImageUri(user.getSecret()) : null)
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
@@ -100,12 +125,20 @@ public class AuthenticationService {
         );
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow();
+        
+        // Convert byte array to base64 string for response
+        String base64Image = null;
+        if (user.getImage() != null) {
+            base64Image = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(user.getImage());
+        }
+        
         if(user.isMfaEnabled()){
             return AuthenticationResponse.builder()
                     .userId(user.getId())
                     .userFirstName(user.getFirstname())
                     .userLastName(user.getLastname())
                     .userRole(user.getRole())
+                    .image(base64Image)
                     .accessToken("")
                     .refreshToken("")
                     .mfaEnabled(true)
@@ -120,6 +153,7 @@ public class AuthenticationService {
                 .userFirstName(user.getFirstname())
                 .userLastName(user.getLastname())
                 .userRole(user.getRole())
+                .image(base64Image)
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
                 .mfaEnabled(false)
@@ -160,7 +194,19 @@ public class AuthenticationService {
             throw new BadCredentialsException("Code is not correct");
         }
         var jwtToken = jwtService.generateToken(user);
+        
+        // Convert byte array to base64 string for response
+        String base64Image = null;
+        if (user.getImage() != null) {
+            base64Image = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(user.getImage());
+        }
+        
         return AuthenticationResponse.builder()
+                .userId(user.getId())
+                .userFirstName(user.getFirstname())
+                .userLastName(user.getLastname())
+                .userRole(user.getRole())
+                .image(base64Image)
                 .accessToken(jwtToken)
                 .mfaEnabled(user.isMfaEnabled())
                 .build();

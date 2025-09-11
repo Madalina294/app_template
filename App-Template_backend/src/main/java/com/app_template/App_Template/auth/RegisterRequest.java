@@ -1,6 +1,7 @@
 package com.app_template.App_Template.auth;
 
 import com.app_template.App_Template.enums.Role;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,5 +18,6 @@ public class RegisterRequest {
     private String email;
     private String password;
     private Role role;
+    private String image;
     private boolean mfaEnabled;
 }

@@ -37,6 +37,8 @@ export class RegisterComponent {
   otpCode = '';
   isSpinning: boolean = false;
   isVerifying: boolean = false;
+  imagePreview: string | null = null;
+  selectedImageBase64: string | null = null;
   private message: NzMessageService;
 
   constructor(
@@ -69,7 +71,52 @@ export class RegisterComponent {
     return password === confirmPassword ? null : { passwordsMismatch: true };
   }
 
-  registerUser() {
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Validare tip fișier
+    if (!file.type.startsWith('image/')) {
+      this.message.error('Please select a valid image file', { nzDuration: 3000 });
+      return;
+    }
+
+    // Validare mărime (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      this.message.error('Image size must be less than 5MB', { nzDuration: 3000 });
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.imagePreview = e.target.result;
+      this.selectedImageBase64 = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeImage() {
+    this.imagePreview = null;
+    this.selectedImageBase64 = null;
+  }
+
+  private async getDefaultUserImage(): Promise<string> {
+    try {
+      const response = await fetch('/user.png');
+      const blob = await response.blob();
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.readAsDataURL(blob);
+      });
+    } catch (error) {
+      console.warn('Could not load default user image:', error);
+      // Return a simple default base64 image if user.png is not found
+      return 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI0MCIgZmlsbD0iIzY2N2VlYSIvPjx0ZXh0IHg9IjUwIiB5PSI1NSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE4IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VVNFUjwvdGV4dD48L3N2Zz4=';
+    }
+  }
+
+  async registerUser() {
     if (this.registerForm.invalid) {
       Object.values(this.registerForm.controls).forEach(control => control.markAsDirty());
       this.registerForm.updateValueAndValidity();
@@ -78,6 +125,12 @@ export class RegisterComponent {
 
     this.isSpinning = true;
     
+    // Determină imaginea de utilizat (selectată sau default)
+    let imageToUse = this.selectedImageBase64;
+    if (!imageToUse) {
+      imageToUse = await this.getDefaultUserImage();
+    }
+    
     // Populez registerRequest din form
     this.registerRequest = {
       firstname: this.registerForm.get('firstname')?.value,
@@ -85,7 +138,8 @@ export class RegisterComponent {
       email: this.registerForm.get('email')?.value,
       password: this.registerForm.get('password')?.value,
       role: 'USER',
-      mfaEnabled: this.registerForm.get('mfaEnabled')?.value
+      mfaEnabled: this.registerForm.get('mfaEnabled')?.value,
+      image: imageToUse
     };
 
     this.authService.register(this.registerRequest)
@@ -108,7 +162,8 @@ export class RegisterComponent {
                 id: response.userId,
                 role: response.userRole,
                 firstname: response.userFirstName,
-                lastname: response.userLastName
+                lastname: response.userLastName,
+                image: response.image
               };
               
               StorageService.saveUser(user);
@@ -161,12 +216,13 @@ export class RegisterComponent {
     this.authService.verifyCode(verifyRequest)
       .subscribe({
         next: (response) => {
-          // Salvez datele utilizatorului
+          // Salvez datele utilizatorului din response (care conține toate datele după verificare)
           const user = {
-            id: this.authResponse.userId,
-            role: this.authResponse.userRole,
-            firstname: this.authResponse.userFirstName,
-            lastname: this.authResponse.userLastName
+            id: response.userId,
+            role: response.userRole,
+            firstname: response.userFirstName,
+            lastname: response.userLastName,
+            image: response.image
           };
           
           StorageService.saveUser(user);

@@ -96,7 +96,8 @@ export class LoginComponent {
           id: res.userId,
           role: res.userRole,
           firstname: res.userFirstName,
-          lastname: res.userLastName
+          lastname: res.userLastName,
+          image: res.image
         };
 
         StorageService.saveUser(user);
@@ -137,10 +138,11 @@ export class LoginComponent {
       .subscribe({
         next: (response) => {
           const user = {
-            id: this.authResponse.userId,
-            role: this.authResponse.userRole,
-            firstname: this.authResponse.userFirstName,
-            lastname: this.authResponse.userLastName
+            id: response.userId,
+            role: response.userRole,
+            firstname: response.userFirstName,
+            lastname: response.userLastName,
+            image: response.image
           };
 
           StorageService.saveUser(user);

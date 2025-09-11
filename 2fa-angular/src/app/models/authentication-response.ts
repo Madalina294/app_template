@@ -3,6 +3,7 @@ export interface AuthenticationResponse{
   userFirstName?: string;
   userLastName?: string;
   userRole?: string;
+  image?: string;
   accessToken?: string;
   mfaEnabled?: string;
   secretImageUri?: string;

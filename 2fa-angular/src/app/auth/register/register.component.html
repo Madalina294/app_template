@@ -67,6 +67,60 @@
           </nz-form-control>
         </nz-form-item>
 
+        <!-- Profile Image (Optional) -->
+        <nz-form-item>
+          <nz-form-control>
+            <label class="image-upload-label">Profile Picture (Optional)</label>
+            <div class="image-upload-container">
+              <div class="image-preview">
+                <img
+                  *ngIf="imagePreview"
+                  [src]="imagePreview"
+                  alt="Profile Preview"
+                  class="preview-image"
+                />
+                <div *ngIf="!imagePreview" class="preview-placeholder">
+                  <span class="preview-icon">📷</span>
+                  <span class="preview-text">No image selected</span>
+                </div>
+              </div>
+              <div class="upload-actions">
+                <input
+                  type="file"
+                  #fileInput
+                  accept="image/*"
+                  (change)="onFileSelected($event)"
+                  class="file-input"
+                  hidden
+                />
+                <button
+                  type="button"
+                  nz-button
+                  nzType="default"
+                  (click)="fileInput.click()"
+                  class="upload-button"
+                >
+                  Choose Image
+                </button>
+                <button
+                  *ngIf="imagePreview"
+                  type="button"
+                  nz-button
+                  nzType="default"
+                  nzDanger
+                  (click)="removeImage()"
+                  class="remove-button"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+            <div class="upload-hint">
+              Supported formats: JPG, PNG, GIF. Max size: 5MB
+            </div>
+          </nz-form-control>
+        </nz-form-item>
+
         <!-- Email -->
         <nz-form-item>
           <nz-form-control

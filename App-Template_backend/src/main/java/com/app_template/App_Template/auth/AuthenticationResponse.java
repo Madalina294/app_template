@@ -2,7 +2,7 @@ package com.app_template.App_Template.auth;
 
 import com.app_template.App_Template.enums.Role;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +18,7 @@ public class AuthenticationResponse {
     private String userFirstName;
     private String userLastName;
     private Role userRole;
+    private String image;
     private String accessToken;
     private String refreshToken;
     private boolean mfaEnabled;

@@ -28,7 +28,7 @@ public class User implements UserDetails {
     private String lastname;
     private String email;
     private String password;
-
+    private byte[] image;
     private boolean mfaEnabled;
     private String secret;
 
