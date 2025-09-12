@@ -13,6 +13,7 @@ import {NzInputDirective} from 'ng-zorro-antd/input';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
 import {NzMessageService} from 'ng-zorro-antd/message';
 import {StorageService} from '../../services/storage/storage.service';
+import { UserStateService } from '../../services/user-state/user-state.service';
 
 @Component({
   selector: 'app-login',
@@ -35,7 +36,7 @@ import {StorageService} from '../../services/storage/storage.service';
 export class LoginComponent {
   authRequest: AuthenticationRequest = {};
   otpCode = '';
-  authResponse: AuthenticationResponse = {};
+  authResponse: AuthenticationResponse | null = null;
   loginForm!: FormGroup;
   isSpinning: boolean = false;
   private message : NzMessageService;
@@ -45,7 +46,8 @@ export class LoginComponent {
     private authService: AuthenticationService,
     private router: Router,
     private fb: FormBuilder,
-     message: NzMessageService
+     message: NzMessageService,
+    private userStateService: UserStateService
   ) {
     this.message = message;
     this.router = router;
@@ -60,7 +62,7 @@ export class LoginComponent {
 
 
   ngOnInit() {
-    this.authResponse = {}; // Reset state
+    this.authResponse = null; // Reset state
     this.otpCode = '';
     this.authRequest = {};
   }
@@ -92,15 +94,17 @@ export class LoginComponent {
           return;
         }
 
-        const user ={
+        const user = {
           id: res.userId,
           role: res.userRole,
           firstname: res.userFirstName,
           lastname: res.userLastName,
-          image: res.image
+          email: this.authRequest.email || '',
+          image: res.image || null,
+          mfaEnabled: res.mfaEnabled || false
         };
 
-        StorageService.saveUser(user);
+        this.userStateService.setUser(user);
         StorageService.saveToken(res.accessToken as string);
 
         if(StorageService.isAdminLoggedIn()){
@@ -142,10 +146,12 @@ export class LoginComponent {
             role: response.userRole,
             firstname: response.userFirstName,
             lastname: response.userLastName,
-            image: response.image
+            email: this.authRequest.email || '',
+            image: response.image || null,
+            mfaEnabled: true
           };
 
-          StorageService.saveUser(user);
+          this.userStateService.setUser(user);
           StorageService.saveToken(response.accessToken as string);
           this.isSpinning = false;
           this.router.navigate(['welcome']);

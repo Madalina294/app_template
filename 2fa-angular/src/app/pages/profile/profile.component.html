@@ -1,21 +1,66 @@
 <div class="profile-main-container">
   <div class="profile-card">
-    <img [src]="user.image" class="user-profile" alt="profile-img">
-    <form (ngSubmit)="updateForm">
-      <mat-form-field>
-        <input matInput placeholder="{user.firstname}" formControlName="user.firstname">
+    <!-- Preview imagine -->
+    <div class="image-section">
+      <img
+        [src]="imagePreview || userImage() || 'assets/default-avatar.png'"
+        class="user-profile"
+        alt="profile-img"
+      />
+      <input
+        type="file"
+        #fileInput
+        (change)="onFileSelected($event)"
+        accept="image/*"
+        style="display: none"
+      />
+      <button mat-button (click)="fileInput.click()">Change Picture</button>
+    </div>
+
+    <form [formGroup]="updateForm" (ngSubmit)="updateProfile()">
+      <mat-form-field appearance="outline">
+        <mat-label>First Name</mat-label>
+        <input matInput formControlName="firstName" />
       </mat-form-field>
-      <mat-form-field>
-        <input matInput placeholder="{user.lastname}" formControlName="user.lastname">
+
+      <mat-form-field appearance="outline">
+        <mat-label>Last Name</mat-label>
+        <input matInput formControlName="lastName" />
       </mat-form-field>
-      <mat-form-field>
-        <input matInput placeholder="{user.email}" formControlName="user.email">
+
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" type="email" />
+        <mat-error *ngIf="updateForm.get('email')?.hasError('email')">
+          Please enter a valid email
+        </mat-error>
       </mat-form-field>
-      // a checkbox for enabling 2fa -> mark mfaEnable as true and make user to login again with 2fa
-      <button mat-button>Update Profile</button>
-      <button mat-button routerLink="/update-password">Change password</button>
-      <button mat-button (click)="logout()">Sign Out</button>
-      <button mat-button (click)="deleteAccount()">Delete Account</button>
+
+      <!-- Checkbox pentru 2FA -->
+      <mat-checkbox formControlName="mfaEnabled">
+        Enable Two-Factor Authentication (2FA)
+      </mat-checkbox>
+      <small *ngIf="user() && !user()!.mfaEnabled">
+        Enabling 2FA will require you to login again
+      </small>
+
+      <div class="button-group">
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="updateForm.invalid"
+        >
+          Update Profile
+        </button>
+      </div>
     </form>
+    <div class="button-group">
+      <button mat-button routerLink="/update-password">Change Password</button>
+      <button mat-button (click)="logout()">Sign Out</button>
+      <button mat-button color="warn" (click)="deleteAccount()">
+        Delete Account
+      </button>
+    </div>
   </div>
 </div>

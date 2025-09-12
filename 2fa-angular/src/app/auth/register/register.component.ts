@@ -12,6 +12,7 @@ import {NzInputDirective} from 'ng-zorro-antd/input';
 import {NzFormControlComponent, NzFormDirective, NzFormItemComponent} from 'ng-zorro-antd/form';
 import {NzMessageService} from 'ng-zorro-antd/message';
 import {StorageService} from '../../services/storage/storage.service';
+import { UserStateService } from '../../services/user-state/user-state.service';
 
 @Component({
   selector: 'app-register',
@@ -33,7 +34,7 @@ import {StorageService} from '../../services/storage/storage.service';
 export class RegisterComponent {
   registerForm!: FormGroup;
   registerRequest: RegisterRequest = {};
-  authResponse: AuthenticationResponse = {};
+  authResponse: AuthenticationResponse | null = null;
   otpCode = '';
   isSpinning: boolean = false;
   isVerifying: boolean = false;
@@ -45,7 +46,8 @@ export class RegisterComponent {
     private authService: AuthenticationService,
     private router: Router,
     private fb: FormBuilder,
-    message: NzMessageService
+    message: NzMessageService,
+    private userStateService: UserStateService
   ) {
     this.message = message;
     this.initializeForm();
@@ -163,10 +165,12 @@ export class RegisterComponent {
                 role: response.userRole,
                 firstname: response.userFirstName,
                 lastname: response.userLastName,
-                image: response.image
+                email: this.registerRequest.email || '',
+                image: response.image || null,
+                mfaEnabled: response.mfaEnabled || false
               };
               
-              StorageService.saveUser(user);
+              this.userStateService.setUser(user);
               StorageService.saveToken(response.accessToken as string);
               
               this.message.success('Account created successfully! Welcome!', { nzDuration: 2000 });
@@ -222,10 +226,12 @@ export class RegisterComponent {
             role: response.userRole,
             firstname: response.userFirstName,
             lastname: response.userLastName,
-            image: response.image
+            email: this.registerRequest.email || '',
+            image: response.image || null,
+            mfaEnabled: true
           };
           
-          StorageService.saveUser(user);
+          this.userStateService.setUser(user);
           StorageService.saveToken(response.accessToken as string);
           
           this.message.success('2FA verified successfully! Welcome!', { nzDuration: 2000 });

@@ -1,10 +1,10 @@
 export interface AuthenticationResponse{
-  userId?: number;
-  userFirstName?: string;
-  userLastName?: string;
-  userRole?: string;
+  userId: number;
+  userFirstName: string;
+  userLastName: string;
+  userRole: string;
   image?: string;
   accessToken?: string;
-  mfaEnabled?: string;
+  mfaEnabled?: boolean;
   secretImageUri?: string;
 }

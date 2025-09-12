@@ -73,6 +73,11 @@ public class UserServiceImpl implements UserService {
                 presentUser.setMfaEnabled(true);
                 presentUser.setSecret(tfaService.generateNewSecret());
             }
+            //deactivate 2fa feature
+            if(presentUser.isMfaEnabled() && !request.isMfaEnabled()){
+                presentUser.setMfaEnabled(false);
+                presentUser.setSecret(null);
+            }
             return userRepository.save(presentUser);
     }
 }

@@ -19,7 +19,7 @@ export class UserService {
   }
 
   updateProfile(updateData: any): Observable<Object>{
-    return this.http.put(this.baseUrl + `/update`, updateData, {headers: this.createAuthorizationHeader()});
+    return this.http.put(this.baseUrl + `/update-infos`, updateData, {headers: this.createAuthorizationHeader()});
   }
 
   createAuthorizationHeader(): HttpHeaders{

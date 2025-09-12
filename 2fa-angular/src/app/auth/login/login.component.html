@@ -1,7 +1,7 @@
 <!-- Main Container -->
 <div class="login-page-container">
   <!-- Login Form Section -->
-  <div class="login-card" *ngIf="!authResponse.mfaEnabled">
+  <div class="login-card" *ngIf="!authResponse?.mfaEnabled">
     <nz-spin
       [nzSpinning]="isSpinning"
       [nzSize]="'large'"
@@ -49,11 +49,14 @@
               formControlName="password"
               class="form-input"
             />
-            <ng-template  style="margin-bottom: 10px;" #errorPass let-control>
+            <ng-template style="margin-bottom: 10px" #errorPass let-control>
               <ng-container *ngIf="control.hasError('required')">
                 Password is required
               </ng-container>
-              <ng-container *ngIf="control.hasError('pattern')" style="margin-bottom: 10px;">
+              <ng-container
+                *ngIf="control.hasError('pattern')"
+                style="margin-bottom: 10px"
+              >
                 Password must contain at least 8 characters with uppercase,
                 lowercase, number and special character
               </ng-container>
@@ -76,35 +79,34 @@
         </div>
       </form>
     </nz-spin>
+  </div>
+
+  <!-- 2FA Verification Section -->
+  <div class="login-card mfa-card" *ngIf="authResponse?.mfaEnabled">
+    <div class="card-header">
+      <h1 class="login-title">Two-Factor Authentication</h1>
+      <p class="login-subtitle">Scan the QR code with your authenticator app</p>
     </div>
 
-    <!-- 2FA Verification Section -->
-    <div class="login-card mfa-card" *ngIf="authResponse.mfaEnabled">
-      <div class="card-header">
-        <h1 class="login-title">Two-Factor Authentication</h1>
-        <p class="login-subtitle">
-          Scan the QR code with your authenticator app
-        </p>
+    <div class="qr-section">
+      <div class="qr-code-container">
+        <img
+          [src]="authResponse?.secretImageUri"
+          alt="QR Code"
+          class="qr-code"
+        />
       </div>
-
-      <div class="qr-section">
-        <div class="qr-code-container">
-          <img
-            [src]="authResponse.secretImageUri"
-            alt="QR Code"
-            class="qr-code"
-          />
-        </div>
-        <p class="qr-instructions">
-          Scan this QR code with Google Authenticator, Authy, or any compatible
-          TOTP app
-        </p>
-      </div>
-      <nz-spin
-        [nzSpinning]="isSpinning"
-        [nzSize]="'large'"
-        nzTip="Signing in..."
-        class="login-spinner">
+      <p class="qr-instructions">
+        Scan this QR code with Google Authenticator, Authy, or any compatible
+        TOTP app
+      </p>
+    </div>
+    <nz-spin
+      [nzSpinning]="isSpinning"
+      [nzSize]="'large'"
+      nzTip="Signing in..."
+      class="login-spinner"
+    >
       <form class="verification-form">
         <nz-form-item>
           <label class="verification-label"
@@ -132,7 +134,6 @@
           Verify & Continue
         </button>
       </form>
-      </nz-spin>
-    </div>
-
+    </nz-spin>
+  </div>
 </div>

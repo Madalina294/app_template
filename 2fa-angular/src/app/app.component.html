@@ -13,7 +13,7 @@
     <!-- Navigation Menu -->
     <mat-menu #menu="matMenu" class="custom-menu">
       <!-- Admin Menu Items -->
-      <div *ngIf="isAdminLoggedIn" class="menu-section">
+      <div *ngIf="isAdminLoggedIn()" class="menu-section">
         <div class="menu-header">
           <mat-icon>admin_panel_settings</mat-icon>
           <span>Admin Panel</span>
@@ -34,7 +34,7 @@
       </div>
 
       <!-- User Menu Items -->
-      <div *ngIf="isCustomerLoggedIn" class="menu-section">
+      <div *ngIf="isCustomerLoggedIn()" class="menu-section">
         <div class="menu-header">
           <mat-icon>person</mat-icon>
           <span>My Dashboard</span>
@@ -55,7 +55,10 @@
       </div>
 
       <!-- Guest Menu Items -->
-      <div *ngIf="!isCustomerLoggedIn && !isAdminLoggedIn" class="menu-section">
+      <div
+        *ngIf="!isCustomerLoggedIn() && !isAdminLoggedIn()"
+        class="menu-section"
+      >
         <div class="menu-header">
           <mat-icon>login</mat-icon>
           <span>Welcome</span>
@@ -82,41 +85,41 @@
         mat-raised-button
         class="login-btn"
         routerLink="/login"
-        *ngIf="!isCustomerLoggedIn && !isAdminLoggedIn"
+        *ngIf="!isCustomerLoggedIn() && !isAdminLoggedIn()"
       >
         <mat-icon>login</mat-icon>
         Log In
       </button>
 
       <!-- User Profile -->
-      <div class="user-profile" *ngIf="isCustomerLoggedIn">
+      <div class="user-profile" *ngIf="isCustomerLoggedIn()">
         <a routerLink="/profile" class="user-link">
           <div class="user-avatar">
             <img
-              *ngIf="userImage"
-              [src]="userImage"
+              *ngIf="userImage()"
+              [src]="userImage()"
               alt="User Avatar"
               class="user-avatar-image"
             />
-            <mat-icon *ngIf="!userImage">person</mat-icon>
+            <mat-icon *ngIf="!userImage()">person</mat-icon>
           </div>
-          <span class="user-name">{{ userName }}</span>
+          <span class="user-name">{{ userName() }}</span>
         </a>
       </div>
 
       <!-- Admin Profile -->
-      <div class="user-profile" *ngIf="isAdminLoggedIn">
+      <div class="user-profile" *ngIf="isAdminLoggedIn()">
         <a routerLink="/profile" class="user-link">
           <div class="user-avatar">
             <img
-              *ngIf="userImage"
-              [src]="userImage"
+              *ngIf="userImage()"
+              [src]="userImage()"
               alt="User Avatar"
               class="user-avatar-image"
             />
-            <mat-icon *ngIf="!userImage">person</mat-icon>
+            <mat-icon *ngIf="!userImage()">person</mat-icon>
           </div>
-          <span class="user-name">{{ userName }}</span>
+          <span class="user-name">{{ userName() }}</span>
         </a>
       </div>
 
