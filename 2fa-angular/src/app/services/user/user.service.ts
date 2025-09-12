@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {StorageService} from '../storage/storage.service';
+import {Observable} from 'rxjs';
 
 
 @Injectable({
@@ -14,7 +15,11 @@ export class UserService {
   ) { }
 
   deleteAccount(userId: number) {
-    return this.http.delete(this.baseUrl + `${userId}`, {headers: this.createAuthorizationHeader()});
+    return this.http.delete(this.baseUrl + `/delete/${userId}`, {headers: this.createAuthorizationHeader()});
+  }
+
+  updateProfile(updateData: any): Observable<Object>{
+    return this.http.put(this.baseUrl + `/update`, updateData, {headers: this.createAuthorizationHeader()});
   }
 
   createAuthorizationHeader(): HttpHeaders{
