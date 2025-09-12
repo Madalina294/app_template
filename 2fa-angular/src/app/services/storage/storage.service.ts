@@ -80,4 +80,12 @@ export class StorageService {
     return '';
   }
 
+  static getUserId(): number{
+    const user = this.getUser();
+    if(user){
+      return user.id;
+    }
+    return -1;
+  }
+
 }

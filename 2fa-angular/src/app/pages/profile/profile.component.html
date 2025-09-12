@@ -1,0 +1,21 @@
+<div class="profile-main-container">
+  <div class="profile-card">
+    <img [src]="user.image" class="user-profile" alt="profile-img">
+    <form (ngSubmit)="updateForm">
+      <mat-form-field>
+        <input matInput placeholder="{user.firstname}" formControlName="user.firstname">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="{user.lastname}" formControlName="user.lastname">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="{user.email}" formControlName="user.email">
+      </mat-form-field>
+      // a checkbox for enabling 2fa -> mark mfaEnable as true and make user to login again with 2fa
+      <button mat-button>Update Profile</button>
+      <button mat-button routerLink="/update-password">Change password</button>
+      <button mat-button (click)="logout()">Sign Out</button>
+      <button mat-button (click)="deleteAccount()">Delete Account</button>
+    </form>
+  </div>
+</div>

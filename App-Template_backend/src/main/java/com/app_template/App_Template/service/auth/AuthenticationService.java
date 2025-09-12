@@ -75,6 +75,12 @@ public class AuthenticationService {
             }
         }
 
+
+        Optional<User> existingUser = userRepository.findFirstByEmail(registerRequest.getEmail());
+        if (existingUser.isPresent()) {
+            throw new IllegalArgumentException("Email already exists");
+        }
+
         var user = User.builder()
                 .firstname(registerRequest.getFirstname())
                 .lastname(registerRequest.getLastname())

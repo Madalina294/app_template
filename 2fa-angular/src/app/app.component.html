@@ -18,7 +18,7 @@
           <mat-icon>admin_panel_settings</mat-icon>
           <span>Admin Panel</span>
         </div>
-        <button mat-menu-item routerLink="/admin/admin-panel" class="menu-item">
+        <button mat-menu-item routerLink="/profile" class="menu-item">
           <mat-icon>account_circle</mat-icon>
           <span>Admin Panel</span>
         </button>
@@ -39,7 +39,7 @@
           <mat-icon>person</mat-icon>
           <span>My Dashboard</span>
         </div>
-        <button mat-menu-item routerLink="/user/my-account" class="menu-item">
+        <button mat-menu-item routerLink="/profile" class="menu-item">
           <mat-icon>account_circle</mat-icon>
           <span>My Account</span>
         </button>
@@ -90,7 +90,7 @@
 
       <!-- User Profile -->
       <div class="user-profile" *ngIf="isCustomerLoggedIn">
-        <a routerLink="/user/my-account" class="user-link">
+        <a routerLink="/profile" class="user-link">
           <div class="user-avatar">
             <img
               *ngIf="userImage"
@@ -106,7 +106,7 @@
 
       <!-- Admin Profile -->
       <div class="user-profile" *ngIf="isAdminLoggedIn">
-        <a routerLink="/admin/admin-panel" class="user-link">
+        <a routerLink="/profile" class="user-link">
           <div class="user-avatar">
             <img
               *ngIf="userImage"
